@@ -1,0 +1,46 @@
+class Solution {
+public:
+    /**
+     * Returns a index to the first occurrence of target in source,
+     * or -1  if target is not part of source.
+     * @param source string to be scanned.
+     * @param target string containing the sequence of characters to match.
+     */
+	int strStr(const char *source, const char *target){
+        if (source==NULL||target==NULL||strlen(source)<strlen(target))
+        {
+        	return -1;
+        }
+        // write your code here
+        unsigned long long int hash_source[1000] = {0};
+        unsigned long long int hash_target = 0;
+        const int base = 10007;
+        int a_len = strlen(source) - 1;
+        int b_len = strlen(target) - 1;
+        int i;
+        for (i = 1 ; i < a_len+1 ; i ++) {
+            hash_source[i] = base*hash_source[i-1];
+            hash_source[i] += int(source[i-1]);
+        }
+        hash_source[i] = base*hash_source[i-1];
+        hash_source[i] += int(source[i-1]);
+        for (i = 0 ; i < b_len+1 ; i ++) {
+        	hash_target *= base;
+            hash_target += int(target[i]);
+        }
+        int lenc = a_len - b_len;
+        unsigned long long int t_base = 1;
+        int j = b_len;
+        while (j>=0) {
+            t_base*=base;
+            j--;
+        }
+        for (i = -1 ; i < lenc ; i ++) {
+            unsigned long long int cmp_t = hash_source[i+b_len+2]-hash_source[i+1]*t_base;
+            if (hash_target == cmp_t) {
+                return i+1;
+            }
+        }	
+        return -1;
+    }
+};
